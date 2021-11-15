@@ -1,5 +1,9 @@
+import 'package:ejemplo/menu.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'main.dart';
+import 'package:ejemplo/menu.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 class Registro extends StatelessWidget {
   @override
@@ -14,6 +18,8 @@ class Registro extends StatelessWidget {
 }
 
 class Home extends StatelessWidget {
+  String email = "", password = "";
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -22,12 +28,78 @@ class Home extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           NavBar(),
-          campoNombre(),
-          campoTelefono(),
-          campoCorreo(),
-          campoPassword(),
+          // campoNombre(),
+          // campoTelefono(),
+          Container(
+            padding: EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0),
+            child: TextField(
+              textAlign: TextAlign.center,
+              decoration: InputDecoration(
+                  hintText: 'Correo', fillColor: Colors.white, filled: true),
+              onChanged: (value) {
+                email = value;
+              },
+            ),
+            margin: EdgeInsets.only(top: 10.0),
+          ),
+          Container(
+            padding: EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0),
+            child: TextField(
+                textAlign: TextAlign.center,
+                obscureText: true,
+                decoration: InputDecoration(
+                    hintText: 'Contraseña',
+                    fillColor: Colors.white,
+                    filled: true),
+                onChanged: (value) {
+                  password = value;
+                }),
+            margin: EdgeInsets.only(top: 10.0),
+          ),
           campoNacimiento(),
-          Botones()
+          InkWell(
+              onTap: () async {
+                try {
+                  UserCredential userCredential = await FirebaseAuth.instance
+                      .createUserWithEmailAndPassword(
+                          email: email, password: password);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Registro éxitoso")));
+                } on FirebaseAuthException catch (e) {
+                  if (e.code == 'weak-password') {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text("La contraseña es muy debil")));
+                  } else if (e.code == 'email-already-in-use') {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text(
+                            "El correo ya se encuentra asociado a una cuenta")));
+                  }
+                } catch (e) {
+                  print(e);
+                }
+              },
+              child: Container(
+                margin: EdgeInsets.only(top: 15.0, left: 20.0, right: 20.0),
+                height: 50.0,
+                width: 130.0,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(30.0),
+                    gradient: LinearGradient(
+                        colors: [Color(0xFF4268D3), Color(0xFF584CD1)],
+                        begin: FractionalOffset(0.2, 0.0),
+                        end: FractionalOffset(1.0, 0.6),
+                        stops: [0.0, 0.6],
+                        tileMode: TileMode.clamp)),
+                child: Center(
+                  child: Text(
+                    'Registrar',
+                    style: TextStyle(
+                        fontSize: 18.0,
+                        fontFamily: "Lato",
+                        color: Colors.white),
+                  ),
+                ),
+              ))
         ],
       )),
       decoration:
@@ -58,7 +130,6 @@ class campoTelefono extends StatelessWidget {
       padding: EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0),
       child: TextField(
         textAlign: TextAlign.center,
-        obscureText: true,
         decoration: InputDecoration(
             hintText: 'Teléfono', fillColor: Colors.white, filled: true),
       ),
@@ -74,7 +145,6 @@ class campoCorreo extends StatelessWidget {
       padding: EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0),
       child: TextField(
         textAlign: TextAlign.center,
-        obscureText: true,
         decoration: InputDecoration(
             hintText: 'Correo', fillColor: Colors.white, filled: true),
       ),
@@ -106,7 +176,6 @@ class campoNacimiento extends StatelessWidget {
       padding: EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0),
       child: TextField(
         textAlign: TextAlign.center,
-        obscureText: true,
         decoration: InputDecoration(
             hintText: 'Fecha Nacimiento',
             fillColor: Colors.white,

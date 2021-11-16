@@ -28,8 +28,8 @@ class Home extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           NavBar(),
-          // campoNombre(),
-          // campoTelefono(),
+          campoNombre(),
+          campoTelefono(),
           Container(
             padding: EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0),
             child: TextField(

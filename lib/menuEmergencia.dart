@@ -105,17 +105,6 @@ class NavBar extends StatelessWidget {
           ),
           margin: EdgeInsets.only(left: 80),
         ),
-        Container(
-          child: ElevatedButton(
-              child: Icon(Icons.account_box, color: Colors.black),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => UserProfile()),
-                );
-              }),
-          margin: EdgeInsets.only(left: 40.0),
-        )
       ]),
     );
   }

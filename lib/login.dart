@@ -99,8 +99,10 @@ class Home extends StatelessWidget {
                     final user = await auth.signInWithEmailAndPassword(
                         email: email, password: contrasena);
                     if (user != null) {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => Menu()));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => Menu.conEmail(email)));
                     }
                   } catch (e) {
                     print(e);
@@ -219,77 +221,3 @@ class campoPassword extends StatelessWidget {
     );
   }
 }
-
-// class Botones extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Row(
-//       children: <Widget>[
-//         InkWell(
-//           onTap: () async {
-//               try {
-//                 final user = await auth.signInWithEmailAndPassword(
-//                     email: email, password: contrasena);
-//                 if (user != null) {
-//                   Navigator.push(
-//                       context, MaterialPageRoute(builder: (context) => Menu()));
-//                 }
-//               } catch (e) {
-//                 ScaffoldMessenger.of(context).showSnackBar(
-//                     SnackBar(content: Text("Verifique los datos ingresados")));
-//               }
-//             },
-//           child: Container(
-//             margin: EdgeInsets.only(top: 15.0, left: 20.0, right: 20.0),
-//             height: 50.0,
-//             width: 130.0,
-//             decoration: BoxDecoration(
-//                 borderRadius: BorderRadius.circular(30.0),
-//                 gradient: LinearGradient(
-//                     colors: [Color(0xFF4268D3), Color(0xFF584CD1)],
-//                     begin: FractionalOffset(0.2, 0.0),
-//                     end: FractionalOffset(1.0, 0.6),
-//                     stops: [0.0, 0.6],
-//                     tileMode: TileMode.clamp)),
-//             child: Center(
-//               child: Text(
-//                 'Ingresar',
-//                 style: TextStyle(
-//                     fontSize: 18.0, fontFamily: "Lato", color: Colors.white),
-//               ),
-//             ),
-//           ),
-//         ),
-//         InkWell(
-//           onTap: () {
-//             Navigator.push(
-//               context,
-//               MaterialPageRoute(builder: (context) => Registro()),
-//             );
-//           },
-//           child: Container(
-//             margin: EdgeInsets.only(top: 15.0, left: 20.0, right: 20.0),
-//             height: 50.0,
-//             width: 130.0,
-//             decoration: BoxDecoration(
-//                 borderRadius: BorderRadius.circular(30.0),
-//                 gradient: LinearGradient(
-//                     colors: [Color(0xFF4268D3), Color(0xFF584CD1)],
-//                     begin: FractionalOffset(0.2, 0.0),
-//                     end: FractionalOffset(1.0, 0.6),
-//                     stops: [0.0, 0.6],
-//                     tileMode: TileMode.clamp)),
-//             child: Center(
-//               child: Text(
-//                 'Registrar',
-//                 style: TextStyle(
-//                     fontSize: 18.0, fontFamily: "Lato", color: Colors.white),
-//               ),
-//             ),
-//           ),
-//         ),
-//       ],
-//       mainAxisAlignment: MainAxisAlignment.center,
-//     );
-//   }
-// }

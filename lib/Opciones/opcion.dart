@@ -75,17 +75,6 @@ class Opcion extends StatelessWidget {
                 ),
                 margin: EdgeInsets.only(left: 15.0),
               ),
-              Container(
-                child: ElevatedButton(
-                    child: Icon(Icons.account_box, color: Colors.black),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => UserProfile()),
-                      );
-                    }),
-                margin: EdgeInsets.only(left: 10.0),
-              )
             ]),
           ),
           CardList(pathImage)

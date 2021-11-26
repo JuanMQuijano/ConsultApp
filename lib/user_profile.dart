@@ -1,117 +1,70 @@
 import 'package:ejemplo/menu.dart';
 import 'package:ejemplo/modify.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 class UserProfile extends StatelessWidget {
+  String email = "", nombre = "", telefono = "";
+
+  UserProfile(String email) {
+    this.email = email;
+  }
+
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  void _read() async {
+    try {
+      var result = await firestore
+          .collection('registros')
+          .where("Correo", isEqualTo: email)
+          .get();
+      result.docs.forEach((element) {
+        print(element.data());
+      });
+    } catch (e) {
+      print("No hay un correo asignado");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'ConsultApp',
-      home: Scaffold(
-        body: Home(),
+    final icono = Container(
+      height: 100.0,
+      width: 100.0,
+      decoration: BoxDecoration(
+        image: DecorationImage(
+            fit: BoxFit.cover, image: AssetImage("assets/img/diente.png")),
       ),
     );
-  }
-}
 
-class Home extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Center(
-          child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          NavBar(),
-          icono,
-          campoNombre(),
-          campoTelefono(),
-          campoNacimiento(),
-          Botones()
-        ],
-      )),
-      decoration:
-          BoxDecoration(boxShadow: <BoxShadow>[BoxShadow(color: Colors.white)]),
-    );
-  }
-}
-
-final icono = Container(
-  height: 100.0,
-  width: 100.0,
-  decoration: BoxDecoration(
-    image: DecorationImage(
-        fit: BoxFit.cover, image: AssetImage("assets/img/diente.png")),
-  ),
-);
-
-class campoNombre extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
+    final campoNombre = Container(
       padding: EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0),
       child: TextField(
         textAlign: TextAlign.center,
         decoration: InputDecoration(
             hintText: 'Nombre', fillColor: Colors.white, filled: true),
+        onChanged: (value) {
+          nombre = value;
+        },
       ),
       margin: EdgeInsets.only(top: 35.0),
     );
-  }
-}
 
-class campoTelefono extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
+    final campoTelefono = Container(
       padding: EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0),
       child: TextField(
         textAlign: TextAlign.center,
-        obscureText: true,
         decoration: InputDecoration(
             hintText: 'Teléfono', fillColor: Colors.white, filled: true),
+        onChanged: (value) {
+          telefono = value;
+        },
       ),
       margin: EdgeInsets.only(top: 10.0),
     );
-  }
-}
 
-class campoCorreo extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0),
-      child: TextField(
-        textAlign: TextAlign.center,
-        obscureText: true,
-        decoration: InputDecoration(
-            hintText: 'Correo', fillColor: Colors.white, filled: true),
-      ),
-      margin: EdgeInsets.only(top: 10.0),
-    );
-  }
-}
-
-class campoPassword extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0),
-      child: TextField(
-        textAlign: TextAlign.center,
-        obscureText: true,
-        decoration: InputDecoration(
-            hintText: 'Contraseña', fillColor: Colors.white, filled: true),
-      ),
-      margin: EdgeInsets.only(top: 10.0),
-    );
-  }
-}
-
-class campoNacimiento extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
+    final campoNacimiento = Container(
       padding: EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0),
       child: TextField(
         textAlign: TextAlign.center,
@@ -123,19 +76,23 @@ class campoNacimiento extends StatelessWidget {
       ),
       margin: EdgeInsets.only(top: 10.0),
     );
-  }
-}
 
-class Botones extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Column(children: <Widget>[
+    final Botones = Column(children: <Widget>[
       InkWell(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => Modify()),
-          );
+        onTap: () async {
+          try {
+            await firestore
+                .collection('registros')
+                .doc('fUAcfzEID25ogjJJ85JY')
+                .update({
+              'Nombre': nombre,
+              'Telefono': telefono,
+            });
+            ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: Text("Actualización éxitosa")));
+          } catch (e) {
+            print(e);
+          }
         },
         child: Container(
           margin: EdgeInsets.only(top: 15.0, left: 20.0, right: 20.0),
@@ -158,16 +115,35 @@ class Botones extends StatelessWidget {
           ),
         ),
       ),
+      InkWell(
+        onTap: () {
+          _read();
+        },
+        child: Container(
+          margin: EdgeInsets.only(top: 15.0, left: 20.0, right: 20.0),
+          height: 50.0,
+          width: 180.0,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(30.0),
+              gradient: LinearGradient(
+                  colors: [Color(0xFF4268D3), Color(0xFF584CD1)],
+                  begin: FractionalOffset(0.2, 0.0),
+                  end: FractionalOffset(1.0, 0.6),
+                  stops: [0.0, 0.6],
+                  tileMode: TileMode.clamp)),
+          child: Center(
+            child: Text(
+              "Comprobar",
+              style: TextStyle(
+                  fontSize: 18.0, fontFamily: "Lato", color: Colors.white),
+            ),
+          ),
+        ),
+      )
     ]);
-  }
-}
 
-class NavBar extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
+    final NavBar = Container(
       height: 50.0,
-      margin: EdgeInsets.only(top: 24.0),
       decoration: BoxDecoration(
           gradient: LinearGradient(
               colors: [Color(0xFF4268D3), Color(0xFF584CD1)],
@@ -198,5 +174,23 @@ class NavBar extends StatelessWidget {
         )
       ]),
     );
+
+    final body = MaterialApp(
+        home: Scaffold(
+            body: ListView(children: [
+      Center(
+          child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          NavBar,
+          icono,
+          campoNombre,
+          campoTelefono,
+          campoNacimiento,
+          Botones
+        ],
+      )),
+    ])));
+    return body;
   }
 }

@@ -29,6 +29,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter  
+  
+  date_picker_timeline: ^1.2.3
+  cloud_firestore:
   firebase_core:
   firebase_auth: "^3.2.0"
   firebase_database: 8.1.0

@@ -46,7 +46,7 @@ class Home extends StatelessWidget {
 
       if (result != null) {
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => Menu()));
+            context, MaterialPageRoute(builder: (context) => Menu(email)));
       } // if result not null we simply call the MaterialpageRoute,
       // for go to the HomePage screen
     }
@@ -99,10 +99,8 @@ class Home extends StatelessWidget {
                     final user = await auth.signInWithEmailAndPassword(
                         email: email, password: contrasena);
                     if (user != null) {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => Menu.conEmail(email)));
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => Menu(email)));
                     }
                   } catch (e) {
                     print(e);
@@ -176,48 +174,6 @@ class Home extends StatelessWidget {
       )),
       decoration:
           BoxDecoration(boxShadow: <BoxShadow>[BoxShadow(color: Colors.white)]),
-    );
-  }
-}
-
-class bienvenido extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      'Bienvenido',
-      style: TextStyle(
-          color: Colors.black, fontSize: 40.0, fontWeight: FontWeight.bold),
-    );
-  }
-}
-
-class campoUsuario extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.only(left: 10.0, right: 5.0, top: 5.0),
-      child: TextField(
-          textAlign: TextAlign.center,
-          decoration: InputDecoration(
-              hintText: 'Usuario', fillColor: Colors.white, filled: true),
-          onChanged: (value) {
-            // email = value;
-          }),
-    );
-  }
-}
-
-class campoPassword extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0),
-      child: TextField(
-        textAlign: TextAlign.center,
-        obscureText: true,
-        decoration: InputDecoration(
-            hintText: 'Contraseña', fillColor: Colors.white, filled: true),
-      ),
     );
   }
 }

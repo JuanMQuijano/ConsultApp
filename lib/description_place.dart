@@ -1,16 +1,22 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'package:flutter/painting.dart';
-import 'register_form.dart';
-import 'package:ejemplo/menuBlanqueamiento.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class DescriptionPlace extends StatelessWidget {
+  DateTime _selectedValue = DateTime.now();
+  String correo;
   String namePlace;
   int stars = 0;
   String descriptionPlace;
   String rutas;
+  String motivo;
 
-  DescriptionPlace(this.namePlace, this.descriptionPlace, this.rutas);
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+  DescriptionPlace(this.correo, this.motivo, this.namePlace,
+      this.descriptionPlace, this.rutas);
 
   @override
   Widget build(BuildContext context) {
@@ -90,11 +96,17 @@ class DescriptionPlace extends StatelessWidget {
       child: ConstrainedBox(
         constraints: BoxConstraints.expand(),
         child: FlatButton(
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => RegisterForm(namePlace)));
+            onPressed: () async {
+              try {
+                await firestore.collection('citas').add({
+                  'Correo': correo,
+                  'Motivo': motivo,
+                  'Clinica': namePlace,
+                  'Fecha': _selectedValue,
+                });
+              } catch (e) {
+                print(e);
+              }
             },
             child: Text("Agendar",
                 style: TextStyle(
@@ -102,9 +114,18 @@ class DescriptionPlace extends StatelessWidget {
       ),
     );
 
+    final fecha = Container(
+        margin: EdgeInsets.only(top: 25.0),
+        child: DatePicker(DateTime.now(),
+            initialSelectedDate: DateTime.now(),
+            selectionColor: Colors.black,
+            selectedTextColor: Colors.white, onDateChange: (value) {
+          _selectedValue = value;
+        }));
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[title_stars, description, btnAgendar],
+      children: <Widget>[title_stars, description, fecha, btnAgendar],
     );
   }
 }

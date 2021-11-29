@@ -1,4 +1,4 @@
-import 'package:ejemplo/Opciones/card_list.dart';
+import 'package:ejemplo/card_list.dart';
 import 'package:ejemplo/user_profile.dart';
 import 'package:flutter/material.dart';
 import 'description_place.dart';
@@ -15,7 +15,9 @@ class Opcion extends StatelessWidget {
       comment2 = "a",
       nUsuario3 = "a",
       comment3 = "",
-      ruta = "";
+      ruta = "",
+      motivo = "",
+      correo = "";
 
   Opcion(
       this.pathImage,
@@ -27,7 +29,9 @@ class Opcion extends StatelessWidget {
       this.comment2,
       this.nUsuario3,
       this.comment3,
-      this.ruta);
+      this.ruta,
+      this.motivo,
+      this.correo);
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +45,7 @@ class Opcion extends StatelessWidget {
         ),
         ListView(
           children: [
-            DescriptionPlace(nombreClinica, descripcion, ruta),
+            DescriptionPlace(correo, motivo, nombreClinica, descripcion, ruta),
             ReviewList.general(
                 nUsuario, comment, nUsuario2, comment2, nUsuario3, comment3)
           ],

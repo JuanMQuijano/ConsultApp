@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'main.dart';
@@ -17,6 +18,7 @@ class Registro extends StatelessWidget {
 
 class Home extends StatelessWidget {
   String email = "", password = "", nombre = "", telefono = "";
+  DateTime _selectedValue = DateTime.now();
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   @override
@@ -77,15 +79,24 @@ class Home extends StatelessWidget {
                 }),
             margin: EdgeInsets.only(top: 10.0),
           ),
-          campoNacimiento(),
+          CalendarDatePicker(
+            firstDate: DateTime(1950),
+            lastDate: DateTime(2050),
+            initialDate: DateTime.now(),
+            onDateChanged: (value) {
+              _selectedValue = value;
+            },
+          ),
           InkWell(
               onTap: () async {
                 try {
+                  print(nombre);
                   await firestore.collection('registros').add({
                     'Nombre': nombre,
                     'Telefono': telefono,
                     'Correo': email,
-                    'Cotraseña': password
+                    'Cotraseña': password,
+                    'Fecha Nacimiento': _selectedValue
                   });
                   UserCredential userCredential = await FirebaseAuth.instance
                       .createUserWithEmailAndPassword(
@@ -130,23 +141,6 @@ class Home extends StatelessWidget {
         ],
       )),
     ]);
-  }
-}
-
-class campoNacimiento extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0),
-      child: TextField(
-        textAlign: TextAlign.center,
-        decoration: InputDecoration(
-            hintText: 'Fecha Nacimiento',
-            fillColor: Colors.white,
-            filled: true),
-      ),
-      margin: EdgeInsets.only(top: 10.0),
-    );
   }
 }
 

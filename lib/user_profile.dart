@@ -1,8 +1,5 @@
 import 'package:ejemplo/menu.dart';
-import 'package:ejemplo/modify.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 class UserProfile extends StatelessWidget {
@@ -12,10 +9,10 @@ class UserProfile extends StatelessWidget {
     this.email = email;
   }
 
-  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  final firestoreInstance = FirebaseFirestore.instance;
   void _read() async {
     try {
-      var result = await firestore
+      var result = await firestoreInstance
           .collection('registros')
           .where("Correo", isEqualTo: email)
           .get();
@@ -81,9 +78,9 @@ class UserProfile extends StatelessWidget {
       InkWell(
         onTap: () async {
           try {
-            await firestore
+            await firestoreInstance
                 .collection('registros')
-                .doc('fUAcfzEID25ogjJJ85JY')
+                .doc('ahvMMGWBorsabp3rxmsO')
                 .update({
               'Nombre': nombre,
               'Telefono': telefono,
@@ -157,7 +154,7 @@ class UserProfile extends StatelessWidget {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Menu()),
+                MaterialPageRoute(builder: (context) => Menu(email)),
               );
             }),
         Container(

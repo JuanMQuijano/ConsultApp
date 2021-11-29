@@ -11,20 +11,19 @@ import 'main.dart';
 
 class Menu extends StatelessWidget {
   String email = "";
-  Menu();
-  Menu.conEmail(String email) {
+  Menu(String email) {
     this.email = email;
   }
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       routes: <String, WidgetBuilder>{
-        "/opcion1": (BuildContext context) => MenuBlanqueamiento(),
-        "/opcion2": (BuildContext context) => MenuCaries(),
-        "/opcion3": (BuildContext context) => MenuGeneral(),
-        "/opcion4": (BuildContext context) => MenuBrackets(),
-        "/opcion5": (BuildContext context) => MenuExtraccion(),
-        "/opcion6": (BuildContext context) => MenuEmergencia(),
+        "/opcion1": (BuildContext context) => MenuBlanqueamiento(email),
+        "/opcion2": (BuildContext context) => MenuCaries(email),
+        "/opcion3": (BuildContext context) => MenuGeneral(email),
+        "/opcion4": (BuildContext context) => MenuBrackets(email),
+        "/opcion5": (BuildContext context) => MenuExtraccion(email),
+        "/opcion6": (BuildContext context) => MenuEmergencia(email),
       },
       title: 'ConsultApp',
       home: Scaffold(
